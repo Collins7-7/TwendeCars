@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
   const statuscode = err.statusCode || 500;
   const message = err.message || "Invalid username or email";
 
-  return res.json({
+  return res.status(statuscode).json({
     success: false,
     statuscode,
     message,
