@@ -1,29 +1,31 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../store";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
+  const { loading, error } = useSelector((state) => state.users);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(signInStart());
     try {
-      await axios.post("/api/auth/signin", {
+      const res = await axios.post("/api/auth/signin", {
         email,
         password,
       });
 
-      setLoading(false);
+      dispatch(signInSuccess(res.data));
       navigate("/");
     } catch (err) {
-      setError(err.response.data.message);
-      setLoading(false);
+      dispatch(signInFailure(err.response.data.message));
     }
 
     setEmail("");
