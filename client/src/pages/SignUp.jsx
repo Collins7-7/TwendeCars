@@ -21,9 +21,9 @@ function SignUp() {
         password,
       });
       setLoading(false);
-      navigate("/sign-in");
+      navigate("/signin");
     } catch (err) {
-      setError(err.message);
+      setError(err.response.data.message);
       setLoading(false);
     }
     setUserName("");
@@ -37,7 +37,7 @@ function SignUp() {
         <input
           type="text"
           placeholder="username"
-          className="p-3 border rounded-lg"
+          className="p-2 border rounded-lg"
           value={userName}
           id="username"
           onChange={(e) => setUserName(e.target.value)}
@@ -67,7 +67,7 @@ function SignUp() {
       </form>
       <div className="flex gap-2 mt-5">
         <p>Have an account?</p>
-        <Link to={"/sign-in"}>
+        <Link to={"/signin"}>
           <span className="text-blue-700">Sign in</span>
         </Link>
       </div>
