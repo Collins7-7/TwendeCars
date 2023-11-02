@@ -15,14 +15,13 @@ function SignUp() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/api/auth/signup", {
+      await axios.post("/api/auth/signup", {
         username: userName,
         email,
         password,
       });
       setLoading(false);
       navigate("/sign-in");
-      console.log(res.data);
     } catch (err) {
       setError(err.message);
       setLoading(false);
