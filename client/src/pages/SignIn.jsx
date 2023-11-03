@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signInStart, signInSuccess, signInFailure } from "../store";
+import OAuth from "../components/OAuth";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -56,12 +57,14 @@ function SignIn() {
         >
           {loading ? "Loading..." : "Sign In"}
         </button>
+        <OAuth />
         <div className="flex gap-2">
           <p>Dont have an account?</p>
           <Link to={"/signup"}>
             <span className="text-blue-700">Sign Up</span>
           </Link>
         </div>
+
         {error && <p className="text-red-500">{error}</p>}
       </form>
     </div>
