@@ -9,7 +9,7 @@ import {
 } from "./users/usersSlice";
 
 const rootReducer = combineReducers({
-  users: usersSliceReducer,
+  user: usersSliceReducer,
 });
 
 const persistConfig = {
