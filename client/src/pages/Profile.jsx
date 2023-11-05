@@ -12,10 +12,15 @@ import {
   profileUpdateStart,
   profileUpdateSuccess,
   profileUpdateFailure,
+  deleteProfileStart,
+  deleteProfileSuccess,
+  deleteProfileFailure,
 } from "../store";
 
 function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
+
+  console.log(currentUser);
 
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -82,6 +87,23 @@ function Profile() {
       dispatch(profileUpdateFailure(error.response.data.message));
     }
   };
+
+  ///Use the delete message in the React Tostify to show the delete message.
+
+  const handleUserDelete = async () => {
+    try {
+      dispatch(deleteProfileStart());
+      const res = await axios.delete(`/api/users/delete/${currentUser._id}`);
+
+      if (res.data.success === false) {
+        return dispatch(deleteProfileFailure(res.data.message));
+      }
+
+      dispatch(deleteProfileSuccess(res.data));
+    } catch (error) {
+      dispatch(deleteProfileFailure(error.response.data.message));
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="font-semibold text-3xl text-center my-7">Profile</h1>
@@ -144,9 +166,16 @@ function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-4">
-        <span className="text-red-600 cursor-pointer">Delete Account?</span>
+        <span
+          onClick={handleUserDelete}
+          className="text-red-600 cursor-pointer"
+        >
+          Delete Account?
+        </span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
+
+      {/* I'll Use React-Tostify for these two also. */}
       {error && <p className="text-red-700 mt-5">{error}</p>}
       {updateSuccess && (
         <p className="text-green-700 mt-5">Profile Update Successful!</p>

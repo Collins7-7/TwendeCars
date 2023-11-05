@@ -9,6 +9,9 @@ import {
   profileUpdateStart,
   profileUpdateSuccess,
   profileUpdateFailure,
+  deleteProfileStart,
+  deleteProfileSuccess,
+  deleteProfileFailure,
 } from "./users/usersSlice";
 
 const rootReducer = combineReducers({
@@ -41,6 +44,9 @@ export {
   profileUpdateFailure,
   profileUpdateSuccess,
   profileUpdateStart,
+  deleteProfileStart,
+  deleteProfileSuccess,
+  deleteProfileFailure,
 };
 
 export const persistor = persistStore(store);
