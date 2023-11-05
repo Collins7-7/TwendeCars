@@ -6,6 +6,9 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
+  profileUpdateStart,
+  profileUpdateSuccess,
+  profileUpdateFailure,
 } from "./users/usersSlice";
 
 const rootReducer = combineReducers({
@@ -30,6 +33,14 @@ const store = configureStore({
   devTools: true,
 });
 
-export { store, signInStart, signInSuccess, signInFailure };
+export {
+  store,
+  signInStart,
+  signInSuccess,
+  signInFailure,
+  profileUpdateFailure,
+  profileUpdateSuccess,
+  profileUpdateStart,
+};
 
 export const persistor = persistStore(store);

@@ -9,9 +9,9 @@ const userTest = (req, res) => {
 };
 
 const updateUserProfile = async (req, res, next) => {
-  if (req.user.id !== res.params.id) {
+  if (req.user.id !== req.params.id) {
     return next(
-      errorHandler(401, "Unauthorized. (You can only update own profile")
+      errorHandler(401, "Unauthorized. (You can only update own profile)")
     );
   }
 
@@ -25,7 +25,7 @@ const updateUserProfile = async (req, res, next) => {
       {
         $set: {
           username: req.body.username,
-          email: res.body.email,
+          email: req.body.email,
           password: req.body.password,
           avatar: req.body.avatar,
         },
