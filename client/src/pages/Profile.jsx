@@ -15,6 +15,9 @@ import {
   deleteProfileStart,
   deleteProfileSuccess,
   deleteProfileFailure,
+  logoutStart,
+  logoutSuccess,
+  logoutFailure,
 } from "../store";
 
 function Profile() {
@@ -104,6 +107,16 @@ function Profile() {
       dispatch(deleteProfileFailure(error.response.data.message));
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      dispatch(logoutStart());
+      const res = await axios.get("/api/auth/logout");
+      dispatch(logoutSuccess(res.data));
+    } catch (error) {
+      dispatch(logoutFailure(error.response.data.message));
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="font-semibold text-3xl text-center my-7">Profile</h1>
@@ -172,7 +185,9 @@ function Profile() {
         >
           Delete Account?
         </span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handleLogout} className="text-red-700 cursor-pointer">
+          Sign out
+        </span>
       </div>
 
       {/* I'll Use React-Tostify for these two also. */}

@@ -12,6 +12,9 @@ import {
   deleteProfileStart,
   deleteProfileSuccess,
   deleteProfileFailure,
+  logoutStart,
+  logoutSuccess,
+  logoutFailure,
 } from "./users/usersSlice";
 
 const rootReducer = combineReducers({
@@ -47,6 +50,9 @@ export {
   deleteProfileStart,
   deleteProfileSuccess,
   deleteProfileFailure,
+  logoutStart,
+  logoutSuccess,
+  logoutFailure,
 };
 
 export const persistor = persistStore(store);
