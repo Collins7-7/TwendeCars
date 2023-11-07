@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -177,6 +178,12 @@ function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          className="bg-teal-700 p-3 rounded-lg uppercase text-white text-center hover:opacity-95"
+          to={"/create-list"}
+        >
+          create car list
+        </Link>
       </form>
       <div className="flex justify-between mt-4">
         <span
