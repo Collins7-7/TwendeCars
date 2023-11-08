@@ -17,8 +17,11 @@ import {
   logoutFailure,
 } from "./users/usersSlice";
 
+import { listingApi } from "./apis/listing.api";
+
 const rootReducer = combineReducers({
   user: usersSliceReducer,
+  [listingApi.reducerPath]: listingApi.reducer,
 });
 
 const persistConfig = {
@@ -34,7 +37,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
-    });
+    }).concat(listingApi.middleware);
   },
   devTools: true,
 });
@@ -54,5 +57,7 @@ export {
   logoutSuccess,
   logoutFailure,
 };
+
+export { useAddListingMutation } from "./apis/listing.api";
 
 export const persistor = persistStore(store);

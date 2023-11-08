@@ -6,15 +6,34 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { useAddListingMutation } from "../store";
+import { useSelector } from "react-redux";
 
 function CreateList() {
+  const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
+    name: "",
+    description: "",
+    modelYear: "",
+    regularPrice: 50,
+    discountPrice: 0,
+    units: 1,
+    type: "lease",
+    offer: false,
+    userRef: currentUser._id,
   });
+
+  const [addListing, result] = useAddListingMutation();
+
+  console.log(result);
+
+  console.log(formData);
   const [imageUploadError, setImageUploadError] = useState(false);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
+  const [error, setError] = useState(false);
 
   const handleImageUpload = () => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -78,12 +97,53 @@ function CreateList() {
       }),
     });
   };
+
+  const handleInputChange = (e) => {
+    if (e.target.id === "sale" || e.target.id === "lease") {
+      return setFormData({
+        ...formData,
+        type: e.target.id,
+      });
+    }
+
+    if (e.target.id === "offer") {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.checked,
+      });
+    }
+    if (
+      e.target.type === "number" ||
+      e.target.type === "text" ||
+      e.target.type === "textarea"
+    ) {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
+    }
+  };
+  const handleCreateList = (e) => {
+    e.preventDefault();
+    if (+formData.regularPrice < +formData.discountPrice) {
+      return setError("Regular Price should be greater than discount price");
+    }
+    if (formData.imageUrls.length < 1) {
+      return setError("You need to upload at least one image");
+    }
+
+    addListing(formData);
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold my-7 text-center">
         Create Cars List
       </h1>
-      <form className="flex flex-col sm:flex-row gap-4">
+      <form
+        onSubmit={handleCreateList}
+        className="flex flex-col sm:flex-row gap-4"
+      >
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
@@ -92,6 +152,8 @@ function CreateList() {
             maxLength="62"
             required
             id="name"
+            onChange={handleInputChange}
+            value={formData.name}
           />
           <textarea
             type="text"
@@ -99,6 +161,8 @@ function CreateList() {
             className="p-3 rounded-lg"
             required
             id="description"
+            onChange={handleInputChange}
+            value={formData.description}
           />
           <input
             type="text"
@@ -106,18 +170,38 @@ function CreateList() {
             className="p-3 rounded-lg"
             required
             id="modelYear"
+            onChange={handleInputChange}
+            value={formData.modelYear}
           />
           <div className="flex flex-wrap gap-8 mb-3">
             <div className="flex gap-2">
-              <input className="w-5" type="checkbox" id="sale" />
+              <input
+                className="w-5"
+                type="checkbox"
+                id="sale"
+                onChange={handleInputChange}
+                checked={formData.type === "sale"}
+              />
               <span>Sale</span>
             </div>
             <div className="flex gap-2">
-              <input className="w-5" type="checkbox" id="lease" />
+              <input
+                className="w-5"
+                type="checkbox"
+                id="lease"
+                onChange={handleInputChange}
+                checked={formData.type === "lease"}
+              />
               <span>Lease</span>
             </div>
             <div className="flex gap-2">
-              <input className="w-5" type="checkbox" id="offer" />
+              <input
+                className="w-5"
+                type="checkbox"
+                id="offer"
+                onChange={handleInputChange}
+                checked={formData.offer}
+              />
               <span>Offer</span>
             </div>
           </div>
@@ -130,6 +214,8 @@ function CreateList() {
                 max="10"
                 required
                 className=" rounded-lg border border-gray-300 p-3"
+                onChange={handleInputChange}
+                value={formData.units}
               />
               <span>Units</span>
             </div>
@@ -137,30 +223,34 @@ function CreateList() {
               <input
                 type="number"
                 id="regularPrice"
-                min="1"
-                max="10"
+                min="50"
                 required
                 className="rounded-lg border border-gray-300 p-3"
+                onChange={handleInputChange}
+                value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
                 <p>Regular Price</p>
                 <span className="text-xs">($/month)</span>
               </div>
             </div>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                id="discountedPrice"
-                min="1"
-                max="10"
-                required
-                className="rounded-lg border border-gray-300 p-3"
-              />
-              <div className="flex flex-col items-center">
-                <p>Discounted Price</p>
-                <span className="text-xs">($/month)</span>
+            {formData.offer && (
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  id="discountPrice"
+                  min="0"
+                  required
+                  className="rounded-lg border border-gray-300 p-3"
+                  onChange={handleInputChange}
+                  value={formData.discountPrice}
+                />
+                <div className="flex flex-col items-center">
+                  <p>Discounted Price</p>
+                  <span className="text-xs">($/month)</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col flex-1 gap-4">
@@ -232,8 +322,13 @@ function CreateList() {
               >{`${filePerc}% Image upload successful!`}</span>
             </p>
           )}
-          <button className="bg-slate-900 text-white uppercase p-3 rounded-lg hover:opacity-95 disabled:opacity-80">
-            Create car list
+
+          {error && <p className="text-red-600">{error}</p>}
+          <button
+            disabled={result.isLoading}
+            className="bg-slate-900 text-white uppercase p-3 rounded-lg hover:opacity-95 disabled:opacity-80"
+          >
+            {result.isLoading ? "Creating..." : "Create car list"}
           </button>
         </div>
       </form>
