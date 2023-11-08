@@ -14,6 +14,7 @@ function CreateList() {
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [filePerc, setFilePerc] = useState(0);
 
   const handleImageUpload = () => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -55,7 +56,7 @@ function CreateList() {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
+          setFilePerc(Math.round(progress));
         },
         (error) => {
           reject(error);
@@ -211,6 +212,26 @@ function CreateList() {
                 </div>
               );
             })}
+
+          {imageUploadError ? (
+            <p>
+              <span className="text-red-600">{imageUploadError}</span>
+            </p>
+          ) : filePerc >= 0 && filePerc < 100 ? (
+            <p>
+              <span
+                hidden={!filePerc}
+                className="text-gray-500"
+              >{`${filePerc}%`}</span>
+            </p>
+          ) : (
+            <p>
+              <span
+                hidden={!isLoadingImages}
+                className="text-green-500"
+              >{`${filePerc}% Image upload successful!`}</span>
+            </p>
+          )}
           <button className="bg-slate-900 text-white uppercase p-3 rounded-lg hover:opacity-95 disabled:opacity-80">
             Create car list
           </button>
