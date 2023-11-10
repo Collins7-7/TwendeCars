@@ -8,6 +8,8 @@ import {
 import { app } from "../firebase";
 import { useAddListingMutation } from "../store";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function CreateList() {
   const { currentUser } = useSelector((state) => state.user);
@@ -25,11 +27,12 @@ function CreateList() {
     userRef: currentUser._id,
   });
 
+  const navigate = useNavigate();
+
   const [addListing, result] = useAddListingMutation();
 
   console.log(result);
 
-  console.log(formData);
   const [imageUploadError, setImageUploadError] = useState(false);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
@@ -125,14 +128,33 @@ function CreateList() {
   };
   const handleCreateList = (e) => {
     e.preventDefault();
-    if (+formData.regularPrice < +formData.discountPrice) {
-      return setError("Regular Price should be greater than discount price");
-    }
-    if (formData.imageUrls.length < 1) {
-      return setError("You need to upload at least one image");
-    }
+    try {
+      if (+formData.regularPrice < +formData.discountPrice) {
+        return setError("Regular Price should be greater than discount price");
+      }
+      if (formData.imageUrls.length < 1) {
+        return setError("You need to upload at least one image");
+      }
 
-    addListing(formData);
+      addListing(formData);
+
+      if (result.isSuccess === true) {
+        toast("List Created Successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        console.log(result.data);
+        // navigate(`/listing/${result.data._id}`);
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   return (
@@ -294,6 +316,7 @@ function CreateList() {
                     alt="carList image"
                   />
                   <button
+                    type="button"
                     onClick={() => handleImageDelete(i)}
                     className="uppercase text-red-600 hover:opacity-75 "
                   >
@@ -304,18 +327,18 @@ function CreateList() {
             })}
 
           {imageUploadError ? (
-            <p>
+            <p className="text-center">
               <span className="text-red-600">{imageUploadError}</span>
             </p>
           ) : filePerc >= 0 && filePerc < 100 ? (
-            <p>
+            <p className="text-center">
               <span
                 hidden={!filePerc}
                 className="text-gray-500"
               >{`${filePerc}%`}</span>
             </p>
           ) : (
-            <p>
+            <p className="text-center">
               <span
                 hidden={!isLoadingImages}
                 className="text-green-500"
@@ -325,7 +348,7 @@ function CreateList() {
 
           {error && <p className="text-red-600">{error}</p>}
           <button
-            disabled={result.isLoading}
+            disabled={result.isLoading || isLoadingImages}
             className="bg-slate-900 text-white uppercase p-3 rounded-lg hover:opacity-95 disabled:opacity-80"
           >
             {result.isLoading ? "Creating..." : "Create car list"}

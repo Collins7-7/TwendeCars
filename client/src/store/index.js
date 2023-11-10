@@ -18,6 +18,7 @@ import {
 } from "./users/usersSlice";
 
 import { listingApi } from "./apis/listing.api";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 const rootReducer = combineReducers({
   user: usersSliceReducer,
@@ -41,6 +42,8 @@ const store = configureStore({
   },
   devTools: true,
 });
+
+setupListeners(store.dispatch);
 
 export {
   store,
