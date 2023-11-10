@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
+import { response } from "express";
 
 const userTest = (req, res) => {
   res.json({
@@ -61,8 +62,23 @@ const getUserListings = async (req, res, next) => {
       next(error);
     }
   } else {
-    next(401, "You can only view your own listings");
+    next(errorHandler(401, "You can only view your own listings"));
   }
 };
 
-export { userTest, updateUserProfile, deleteUser, getUserListings };
+const getOneUserListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    res.status(200).json(listing);
+  } catch (error) {
+    next(errorHandler(404, "Couldn't find listing"));
+  }
+};
+
+export {
+  userTest,
+  updateUserProfile,
+  deleteUser,
+  getUserListings,
+  getOneUserListing,
+};
