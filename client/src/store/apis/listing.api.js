@@ -7,13 +7,6 @@ const listingApi = createApi({
   }),
   endpoints(builder) {
     return {
-      getListing: builder.query({
-        query:(listing) => {
-          return{
-            ///NITAMALIZIA
-          }
-        }
-      }),
       addListing: builder.mutation({
         query: (listing) => {
           return {

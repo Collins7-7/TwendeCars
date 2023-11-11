@@ -31,8 +31,6 @@ function CreateList() {
 
   const [addListing, result] = useAddListingMutation();
 
-  console.log(result);
-
   const [imageUploadError, setImageUploadError] = useState(false);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
@@ -126,7 +124,7 @@ function CreateList() {
       });
     }
   };
-  const handleCreateList = (e) => {
+  const handleCreateList = async (e) => {
     e.preventDefault();
     try {
       if (+formData.regularPrice < +formData.discountPrice) {
@@ -136,9 +134,11 @@ function CreateList() {
         return setError("You need to upload at least one image");
       }
 
-      addListing(formData);
+      const res = await addListing(formData);
 
-      if (result.isSuccess === true) {
+      console.log(res.data);
+
+      if (res.data) {
         toast("List Created Successfully!", {
           position: "top-right",
           autoClose: 5000,
@@ -149,8 +149,8 @@ function CreateList() {
           progress: undefined,
           theme: "dark",
         });
-        console.log(result.data);
-        // navigate(`/listing/${result.data._id}`);
+
+        navigate(`/listing/${res.data._id}`);
       }
     } catch (error) {
       setError(error);
