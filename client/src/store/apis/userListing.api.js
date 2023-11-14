@@ -15,10 +15,20 @@ const userListingApi = createApi({
           };
         },
       }),
+
+      getUserListings: builder.query({
+        query: (user) => {
+          return {
+            url: `/listings/${user._id}`,
+            method: "GET",
+          };
+        },
+      }),
     };
   },
 });
 
-export const { useGetSingleListingQuery } = userListingApi;
+export const { useGetSingleListingQuery, useGetUserListingsQuery } =
+  userListingApi;
 
 export { userListingApi };

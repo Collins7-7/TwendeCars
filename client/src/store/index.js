@@ -66,6 +66,9 @@ export {
 };
 
 export { useAddListingMutation } from "./apis/listing.api";
-export { useGetSingleListingQuery } from "./apis/userListing.api";
+export {
+  useGetSingleListingQuery,
+  useGetUserListingsQuery,
+} from "./apis/userListing.api";
 
 export const persistor = persistStore(store);

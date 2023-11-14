@@ -9,6 +9,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { toast } from "react-toastify";
 import {
   profileUpdateStart,
   profileUpdateSuccess,
@@ -19,12 +20,16 @@ import {
   logoutStart,
   logoutSuccess,
   logoutFailure,
+  useGetUserListingsQuery,
 } from "../store";
 
 function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
-  console.log(currentUser);
+  const { data, isError, isFetching } = useGetUserListingsQuery(currentUser);
+  const [carListings, setCarListings] = useState([]);
+
+  console.log(data);
 
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -119,6 +124,16 @@ function Profile() {
       dispatch(logoutFailure(error.response.data.message));
     }
   };
+
+  const handleDisplayCars = () => {
+    try {
+      if (data && data.length > 0) {
+        return setCarListings(data);
+      }
+    } catch (error) {
+      isError;
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="font-semibold text-3xl text-center my-7">Profile</h1>
@@ -202,6 +217,71 @@ function Profile() {
       {error && <p className="text-red-700 mt-5">{error}</p>}
       {updateSuccess && (
         <p className="text-green-700 mt-5">Profile Update Successful!</p>
+      )}
+
+      <button
+        onClick={handleDisplayCars}
+        className="w-full p-3 rounded-lg mt-5 text-green-500 border bg-slate-900"
+      >
+        My Cars
+      </button>
+      {isError &&
+        toast.error("Error getting cars listings", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        })}
+      {isFetching && (
+        <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+          <div className="animate-pulse flex space-x-4">
+            <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+            <div className="flex-1 space-y-6 py-1">
+              <div className="h-2 bg-slate-700 rounded"></div>
+              <div className="space-y-3">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                  <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                </div>
+                <div className="h-2 bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {carListings.length > 0 && (
+        <div className="flex gap-4 flex-col">
+          <h1 className="text-center w-full mt-7 text-3xl">Your Cars</h1>
+          {carListings.map((listing) => {
+            return (
+              <div
+                className="flex p-3 rounded-lg border justify-between items-center"
+                key={listing._id}
+              >
+                <Link to={`/listing/${listing._id}`} className="h-16 w-16">
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt="Listing cover image"
+                  ></img>
+                </Link>
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="flex-1 hover:underline truncate"
+                >
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex flex-col">
+                  <button className="uppercase text-red-600">delete</button>
+                  <button className="uppercase text-green-500">edit</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
