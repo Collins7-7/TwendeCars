@@ -10,7 +10,30 @@ const createListing = async (req, res, next) => {
   }
 };
 
-export { createListing };
+const deleteListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) {
+    next(errorHandler(404, "Listing not found"));
+    return;
+  }
+
+  if (req.user.id !== listing.userRef) {
+    console.log(req.params.id);
+    console.log(listing.userRef);
+    next(errorHandler(401, "You can only delete your own listing"));
+    return;
+  }
+
+  try {
+    await Listing.findByIdAndDelete(req.params.id);
+    res.status(200).json("Successfully deleted!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createListing, deleteListing };
 
 //// AS a christian i'd say,
 // we humans are imperfect and limited in our knowledge and we'll always be limited, and we'll always depend on faith.

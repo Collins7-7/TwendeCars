@@ -17,13 +17,11 @@ import {
   logoutFailure,
 } from "./users/usersSlice";
 
-import { listingApi } from "./apis/listing.api";
 import { userListingApi } from "./apis/userListing.api";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 const rootReducer = combineReducers({
   user: usersSliceReducer,
-  [listingApi.reducerPath]: listingApi.reducer,
   [userListingApi.reducerPath]: userListingApi.reducer,
 });
 
@@ -40,9 +38,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false,
-    })
-      .concat(listingApi.middleware)
-      .concat(userListingApi.middleware);
+    }).concat(userListingApi.middleware);
   },
   devTools: true,
 });
@@ -65,10 +61,11 @@ export {
   logoutFailure,
 };
 
-export { useAddListingMutation } from "./apis/listing.api";
 export {
   useGetSingleListingQuery,
   useGetUserListingsQuery,
+  useAddListingMutation,
+  useRemoveListingMutation,
 } from "./apis/userListing.api";
 
 export const persistor = persistStore(store);

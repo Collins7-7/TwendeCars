@@ -21,6 +21,7 @@ import {
   logoutSuccess,
   logoutFailure,
   useGetUserListingsQuery,
+  useRemoveListingMutation,
 } from "../store";
 
 function Profile() {
@@ -29,7 +30,8 @@ function Profile() {
   const { data, isError, isFetching } = useGetUserListingsQuery(currentUser);
   const [carListings, setCarListings] = useState([]);
 
-  console.log(data);
+  const [removeListing, result] = useRemoveListingMutation();
+  console.log(result);
 
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -128,10 +130,40 @@ function Profile() {
   const handleDisplayCars = () => {
     try {
       if (data && data.length > 0) {
+        console.log(data);
         return setCarListings(data);
       }
     } catch (error) {
       isError;
+      console.error(error);
+    }
+  };
+
+  const handleDeleteListing = async (id) => {
+    setCarListings([]);
+    try {
+      const res = await removeListing(id);
+      if (res.isSuccess) {
+        setCarListings(
+          carListings.filter((listing) => {
+            return listing._id !== id;
+          })
+        );
+
+        toast.success("Listing deleted successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      console.error(error).message;
+      setCarListings(carListings);
     }
   };
   return (
@@ -275,7 +307,12 @@ function Profile() {
                   <p>{listing.name}</p>
                 </Link>
                 <div className="flex flex-col">
-                  <button className="uppercase text-red-600">delete</button>
+                  <button
+                    onClick={() => handleDeleteListing(listing._id)}
+                    className="uppercase text-red-600"
+                  >
+                    delete
+                  </button>
                   <button className="uppercase text-green-500">edit</button>
                 </div>
               </div>
