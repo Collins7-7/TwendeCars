@@ -9,11 +9,14 @@ const userListingApi = createApi({
   endpoints(builder) {
     return {
       getSingleListing: builder.query({
-        query: (listing) => {
+        query: (listingId) => {
           return {
-            url: `users/listing/${listing._id}`,
+            url: `listings/get/${listingId}`,
             method: "GET",
           };
+        },
+        providesTags: (result, error, arg) => {
+          return [{ type: "Listing", id: arg }];
         },
       }),
       getUserListings: builder.query({
@@ -55,6 +58,19 @@ const userListingApi = createApi({
         },
         invalidatesTags: (result, error, arg) => [{ type: "Listing", id: arg }],
       }),
+
+      updateListing: builder.mutation({
+        query: (listing) => {
+          return {
+            url: `listings/update/${listing._id}`,
+            method: "PUT",
+            body: listing,
+          };
+        },
+        invalidatesTags: (result, error, arg) => [
+          { type: "Listing", id: arg._id },
+        ],
+      }),
     };
   },
 });
@@ -64,6 +80,7 @@ export const {
   useGetUserListingsQuery,
   useAddListingMutation,
   useRemoveListingMutation,
+  useUpdateListingMutation,
 } = userListingApi;
 
 export { userListingApi };

@@ -66,25 +66,25 @@ const getUserListings = async (req, res, next) => {
   }
 };
 
-const getOneUserListing = async (req, res, next) => {
-  //// Using a user, we can find there listings, search their listings and compare the params id with a single
-  // listing in their listings and when we find it, we return that particular listing to the user.
-  try {
-    const listing = await Listing.findById(req.params.id);
-    if (listing.userRef === req.user.id) {
-      res.status(200).json(listing);
-    } else {
-      next(errorHandler(401, "You can only view your own listing"));
-    }
-  } catch (error) {
-    next(errorHandler(404, "Couldn't find listing"));
-  }
-};
+// const getOneUserListing = async (req, res, next) => {
+//   //// Using a user, we can find there listings, search their listings and compare the params id with a single
+//   // listing in their listings and when we find it, we return that particular listing to the user.
+//   try {
+//     const listing = await Listing.findById(req.params.id);
+//     if (listing.userRef === req.user.id) {
+//       res.status(200).json(listing);
+//     } else {
+//       next(errorHandler(401, "You can only view your own listing"));
+//     }
+//   } catch (error) {
+//     next(errorHandler(404, "Couldn't find listing"));
+//   }
+// };
 
 export {
   userTest,
   updateUserProfile,
   deleteUser,
   getUserListings,
-  getOneUserListing,
+  // getOneUserListing,
 };

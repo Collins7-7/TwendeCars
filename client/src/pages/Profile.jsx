@@ -166,6 +166,7 @@ function Profile() {
       setCarListings(carListings);
     }
   };
+
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="font-semibold text-3xl text-center my-7">Profile</h1>
@@ -313,7 +314,9 @@ function Profile() {
                   >
                     delete
                   </button>
-                  <button className="uppercase text-green-500">edit</button>
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button className="uppercase text-green-500">edit</button>
+                  </Link>
                 </div>
               </div>
             );

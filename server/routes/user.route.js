@@ -4,7 +4,7 @@ import {
   updateUserProfile,
   deleteUser,
   getUserListings,
-  getOneUserListing,
+  // getOneUserListing,
 } from "../controllers/user.controller.js";
 import { verifyUserToken } from "../utils/verifyUserToken.js";
 
@@ -14,6 +14,6 @@ userRouter.get("/test", userTest);
 userRouter.post("/profile/:id", verifyUserToken, updateUserProfile);
 userRouter.delete("/delete/:id", verifyUserToken, deleteUser);
 userRouter.get("/listings/:id", verifyUserToken, getUserListings);
-userRouter.get("/listing/:id", verifyUserToken, getOneUserListing);
+// userRouter.get("/listing/:id", verifyUserToken, getOneUserListing);
 
 export default userRouter;
