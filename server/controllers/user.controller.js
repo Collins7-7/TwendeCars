@@ -66,6 +66,22 @@ const getUserListings = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      next(errorHandler(404, "User not found"));
+      return;
+    }
+
+    const { password: pass, ...rest } = user._doc;
+
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // const getOneUserListing = async (req, res, next) => {
 //   //// Using a user, we can find there listings, search their listings and compare the params id with a single
 //   // listing in their listings and when we find it, we return that particular listing to the user.
@@ -86,5 +102,6 @@ export {
   updateUserProfile,
   deleteUser,
   getUserListings,
+  getUser,
   // getOneUserListing,
 };

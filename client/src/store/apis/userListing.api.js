@@ -37,6 +37,17 @@ const userListingApi = createApi({
               ]
             : ["Listing"],
       }),
+      getLandLord: builder.query({
+        providesTags: (result, error, arg) => {
+          return [{ type: "User", id: arg }];
+        },
+        query: (lordId) => {
+          return {
+            url: `users/${lordId}`,
+            method: "GET",
+          };
+        },
+      }),
       addListing: builder.mutation({
         invalidatesTags: (result, error, arg) => [
           { type: "Listing", id: arg._id },
@@ -81,6 +92,7 @@ export const {
   useAddListingMutation,
   useRemoveListingMutation,
   useUpdateListingMutation,
+  useGetLandLordQuery,
 } = userListingApi;
 
 export { userListingApi };

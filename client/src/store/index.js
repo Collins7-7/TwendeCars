@@ -67,6 +67,7 @@ export {
   useAddListingMutation,
   useRemoveListingMutation,
   useUpdateListingMutation,
+  useGetLandLordQuery,
 } from "./apis/userListing.api";
 
 export const persistor = persistStore(store);

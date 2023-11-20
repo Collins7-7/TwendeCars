@@ -1,19 +1,20 @@
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useGetSingleListingQuery } from "../store";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css/bundle";
-import {
-  FaChair,
-  FaMapMarkedAlt,
-  FaMapMarkerAlt,
-  FaCarSide,
-} from "react-icons/fa";
+import { FaCar, FaCarSide } from "react-icons/fa";
+import Contact from "../components/Contact";
 
 function Listing() {
   SwiperCore.use([Navigation]);
+
+  const { currentUser } = useSelector((state) => state.user);
+
+  const [contact, setContact] = useState(false);
   const params = useParams();
   const { data, isError, isLoading } = useGetSingleListingQuery(
     params.listingId
@@ -88,7 +89,7 @@ function Listing() {
               {data.type === "lease" && " / month"}
             </p>
             <p className="flex items-center mt-6 gap-2 text-slate-600  text-sm">
-              <FaMapMarkerAlt className="text-green-700" />
+              <FaCar className="text-green-700" />
               {data.modelYear}
             </p>
             <div className="flex gap-4">
@@ -111,6 +112,15 @@ function Listing() {
                 {data.units && `${data.units} available`}
               </li>
             </ul>
+            {currentUser && currentUser._id !== data.userRef && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-900 rounded-lg hover:opacity-95 text-white p-3 uppercase"
+              >
+                Contact Owner
+              </button>
+            )}
+            {contact && <Contact listing={data} />}
           </div>
         </div>
       )}
