@@ -103,5 +103,6 @@ export {
   deleteUser,
   getUserListings,
   getUser,
+
   // getOneUserListing,
 };
