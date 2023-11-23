@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePostSearchMutation } from "../store";
+import ListItem from "../components/ListItem";
 
 function Search() {
   const [searchContent, setSearchContent] = useState({
@@ -14,6 +15,7 @@ function Search() {
   const [postSearch, result] = usePostSearchMutation();
   console.log(result);
 
+  const [listings, setListings] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +40,8 @@ function Search() {
 
     const fetchRequest = async () => {
       const res = await postSearch(searchQuery);
-      console.log(res);
+      setListings(res.data);
+      console.log(listings);
     };
 
     fetchRequest();
@@ -164,10 +167,23 @@ function Search() {
           </button>
         </form>
       </div>
-      <div className="">
+      <div className="flex-1">
         <h1 className="font-semibold text-3xl border-b p-3 text-slate-800">
           Search Result:
         </h1>
+        <div className="flex gap-4 flex-wrap p-7">
+          {!result.isLoading ||
+            (listings.length < 1 && (
+              <p className="text-xl text-slate-700">No listing found</p>
+            ))}
+
+          {result.isLoading && (
+            <p className="text-xl text-slate-700">Loading...</p>
+          )}
+          {listings?.map((listing) => {
+            return <ListItem key={listing._id} listing={listing} />;
+          })}
+        </div>
       </div>
     </div>
   );
