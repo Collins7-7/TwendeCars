@@ -8,6 +8,16 @@ const userListingApi = createApi({
   }),
   endpoints(builder) {
     return {
+      postSearch: builder.mutation({
+        query: (urlParams) => {
+          return {
+            url: `listings/get?${urlParams}`,
+            method: "POST",
+            body: {},
+          };
+        },
+        invalidatesTags: () => [{ type: "Listing" }],
+      }),
       getSingleListing: builder.query({
         query: (listingId) => {
           return {
@@ -93,6 +103,7 @@ export const {
   useRemoveListingMutation,
   useUpdateListingMutation,
   useGetLandLordQuery,
+  usePostSearchMutation,
 } = userListingApi;
 
 export { userListingApi };
