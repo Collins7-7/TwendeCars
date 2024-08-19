@@ -187,7 +187,7 @@ function UpdateListing() {
             required
             id="name"
             onChange={handleInputChange}
-            value={formData.name}
+            value={formData?.name}
           />
           <textarea
             type="text"
@@ -196,7 +196,7 @@ function UpdateListing() {
             required
             id="description"
             onChange={handleInputChange}
-            value={formData.description}
+            value={formData?.description}
           />
           <input
             type="text"
@@ -205,7 +205,7 @@ function UpdateListing() {
             required
             id="modelYear"
             onChange={handleInputChange}
-            value={formData.modelYear}
+            value={formData?.modelYear}
           />
           <div className="flex flex-wrap gap-8 mb-3">
             <div className="flex gap-2">
@@ -214,7 +214,7 @@ function UpdateListing() {
                 type="checkbox"
                 id="sale"
                 onChange={handleInputChange}
-                checked={formData.type === "sale"}
+                checked={formData?.type === "sale"}
               />
               <span>Sale</span>
             </div>
@@ -224,7 +224,7 @@ function UpdateListing() {
                 type="checkbox"
                 id="lease"
                 onChange={handleInputChange}
-                checked={formData.type === "lease"}
+                checked={formData?.type === "lease"}
               />
               <span>Lease</span>
             </div>
@@ -234,7 +234,7 @@ function UpdateListing() {
                 type="checkbox"
                 id="offer"
                 onChange={handleInputChange}
-                checked={formData.offer}
+                checked={formData?.offer}
               />
               <span>Offer</span>
             </div>
@@ -249,7 +249,7 @@ function UpdateListing() {
                 required
                 className=" rounded-lg border border-gray-300 p-3"
                 onChange={handleInputChange}
-                value={formData.units}
+                value={formData?.units}
               />
               <span>Units</span>
             </div>
@@ -261,7 +261,7 @@ function UpdateListing() {
                 required
                 className="rounded-lg border border-gray-300 p-3"
                 onChange={handleInputChange}
-                value={formData.regularPrice}
+                value={formData?.regularPrice}
               />
               <div className="flex flex-col items-center">
                 <p>Regular Price</p>
@@ -277,7 +277,7 @@ function UpdateListing() {
                   required
                   className="rounded-lg border border-gray-300 p-3"
                   onChange={handleInputChange}
-                  value={formData.discountPrice}
+                  value={formData?.discountPrice}
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted Price</p>

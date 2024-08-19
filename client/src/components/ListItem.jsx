@@ -7,7 +7,7 @@ function ListItem({ listing }) {
     <div className="w-full bg-white shadow-md hover:shadow-lg transition-shadow sm:w-[330px] rounded-lg overflow-hidden">
       <Link to={`/listing/${listing._id}`}>
         <img
-          src={listing.imageUrls[0]}
+          src={listing.imageUrls[0] || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGG4rsbT6C2hO2QbUbniHcqXaXa73tBT7Nfw&s"}
           alt="listing-cover"
           className="h-[320px] sm:h-[220px] rounded-lg hover:scale-105
           transition-scale object-cover w-full duration-300"
