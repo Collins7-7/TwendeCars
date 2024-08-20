@@ -1,14 +1,17 @@
 import Cars from "../assets/Cars.json"
 import { useState, useEffect } from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 import Lottie from "lottie-react";
 import ListItem from "../components/ListItem";
+import { usePostSearchMutation } from "../store";
 
 function Home() {
 
+  const [postSearch, result] = usePostSearchMutation();
+
 const [offerListings, setOfferListings] = useState([]);
-const [saleListings, setSalesListings] = useState([]);
+const [saleListings, setSaleListings] = useState([]);
 const [leaseListings, setLeaseListings] = useState([]);
 
 console.log("Sale listings: ",saleListings)
@@ -16,9 +19,8 @@ console.log("Sale listings: ",saleListings)
 useEffect(()=>{
   const fetchOfferListings = async ()=> {
     try {
-      const res = await fetch('/api/listings/get?offer=true&limit=4')
-      const data = await res.json();
-      setOfferListings(data);
+      const res = await postSearch("offer=true&limit=4")
+      setOfferListings(res.data);
       fetchLeaseListing();
     } catch (error) {
       console.log(error)
@@ -27,9 +29,8 @@ useEffect(()=>{
 
   const fetchLeaseListing = async()=> {
     try {
-      const res = await fetch('/api/listings/get?type=lease&limit=4')
-      const data = await res.json();
-      setLeaseListings(data);
+      const res = await postSearch("type=lease&limit=4");
+      setLeaseListings(res.data);
       fetchSaleListings();
     } catch (error) {
       console.log(error);
@@ -38,9 +39,8 @@ useEffect(()=>{
 
   const fetchSaleListings = async()=> {
     try {
-      const res = await fetch('/api/listings/get?type=sale&limit=4')
-      const data = await res.json();
-      setSalesListings(data);
+      const res = await postSearch("type=sale&limit=4")
+      setSaleListings(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +65,7 @@ useEffect(()=>{
   <div style={{marginBottom: "20%"}} className="h-[500px]">
       <Lottie  animationData={Cars}></Lottie>
   </div>
-    {/* {listing results for offer, sale and rent} */}
+    {/* {listing results for offer, sale and lease} */}
   
   <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8">
     {
@@ -80,6 +80,46 @@ useEffect(()=>{
           <div className="flex flex-wrap gap-4">
             {
               offerListings.map((listing)=> (
+                <ListItem listing={listing} key={listing._id}></ListItem>
+              ))
+            }
+          </div>
+        </div>
+      )
+    }
+
+{
+      leaseListings && leaseListings.length > 0 && (
+        <div className="my-10">
+          <div className="my-3">
+            <h2 className="text-2xl font-semibold text-slate-600">Leasable Cars</h2>
+            <Link className="text-sm text-slate-800 hover:underline" to={'/search?type=lease'}>
+            show more cars for lease...
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {
+              leaseListings.map((listing)=> (
+                <ListItem listing={listing} key={listing._id}></ListItem>
+              ))
+            }
+          </div>
+        </div>
+      )
+    }
+
+{
+      saleListings && saleListings.length > 0 && (
+        <div className="my-10">
+          <div className="my-3">
+            <h2 className="text-2xl font-semibold text-slate-600">Cars For Sale</h2>
+            <Link className="text-sm text-slate-800 hover:underline" to={'/search?type=sale'}>
+            show more cars for sale...
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {
+              saleListings.map((listing)=> (
                 <ListItem listing={listing} key={listing._id}></ListItem>
               ))
             }

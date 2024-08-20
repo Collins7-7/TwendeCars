@@ -18,6 +18,8 @@ const userListingApi = createApi({
         },
         invalidatesTags: () => [{ type: "Listing" }],
       }),
+
+
       getSingleListing: builder.query({
         query: (listingId) => {
           return {
@@ -104,6 +106,7 @@ export const {
   useUpdateListingMutation,
   useGetLandLordQuery,
   usePostSearchMutation,
+
 } = userListingApi;
 
 export { userListingApi };

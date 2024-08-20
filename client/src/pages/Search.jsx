@@ -13,9 +13,10 @@ function Search() {
   });
 
   const [postSearch, result] = usePostSearchMutation();
-  console.log(result);
+  console.log("Result of postSearch",result);
 
   const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
@@ -37,10 +38,13 @@ function Search() {
       });
     }
 
-    const searchQuery = urlParams.toString();
+    
 
     const fetchRequest = async () => {
+      
+      setLoading(true)
       setShowMore(false);
+      const searchQuery = urlParams.toString();
       const res = await postSearch(searchQuery);
       setListings(res.data);
 
