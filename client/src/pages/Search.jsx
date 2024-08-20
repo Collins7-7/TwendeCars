@@ -206,7 +206,7 @@ function Search() {
         </div>
         {showMore && (
           <button
-            className="text-purple-500 underline"
+            className="text-purple-500 hover:underline p-7 text-center w-full"
             onClick={handleShowMore}
           >
             Show More
