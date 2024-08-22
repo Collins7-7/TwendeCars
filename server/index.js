@@ -26,7 +26,9 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listings", listingRouter);
 
-app.listen(3000, () => {
+const port = 3000 || 4000;
+
+app.listen(port, () => {
   console.log("Listening on port 3000");
 });
 
