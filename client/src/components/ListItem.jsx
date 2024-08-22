@@ -28,7 +28,7 @@ function ListItem({ listing }) {
           <p className="mt-2 text-slate-500 font-semibold">
             Ksh
             {listing.offer
-              ? listing?.discountPrice.toLocaleString("en-US")
+              ? (+listing?.regularPrice - +listing.discountPrice).toLocaleString("en-US")
               : listing?.regularPrice.toLocaleString("en-US")}
             {listing.type === "lease" && "/month"}
           </p>
