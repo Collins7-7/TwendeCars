@@ -139,10 +139,10 @@ function UpdateListing() {
   const handleUpdateList = async (e) => {
     e.preventDefault();
     try {
-      if (+formData.regularPrice < +formData.discountPrice) {
+      if (+formData?.regularPrice < +formData?.discountPrice) {
         return setError("Regular Price should be greater than discount price");
       }
-      if (formData.imageUrls.length < 1) {
+      if (formData?.imageUrls.length < 1) {
         return setError("You need to upload at least one image");
       }
 
@@ -265,7 +265,7 @@ function UpdateListing() {
               />
               <div className="flex flex-col items-center">
                 <p>Regular Price</p>
-                <span className="text-xs">($/month)</span>
+                <span className="text-xs">(Ksh/month)</span>
               </div>
             </div>
             {formData.offer && (
@@ -281,7 +281,7 @@ function UpdateListing() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted Price</p>
-                  <span className="text-xs">($/month)</span>
+                  <span className="text-xs">(Ksh/month)</span>
                 </div>
               </div>
             )}

@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 function CreateList() {
   const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState([]);
+  const [leaseTrue, setLeaseTrue] = useState(false);
+
   const [formData, setFormData] = useState({
     imageUrls: [],
     name: "",
@@ -101,6 +103,12 @@ function CreateList() {
 
   const handleInputChange = (e) => {
     if (e.target.id === "sale" || e.target.id === "lease") {
+      if(e.target.id === "lease"){
+        setLeaseTrue(true)
+      }else{
+        setLeaseTrue(false)
+      }
+
       return setFormData({
         ...formData,
         type: e.target.id,
@@ -253,7 +261,7 @@ function CreateList() {
               />
               <div className="flex flex-col items-center">
                 <p>Regular Price</p>
-                <span className="text-xs">($/month)</span>
+                <span className="text-xs"> {leaseTrue? "Ksh/month": "Ksh" }</span>
               </div>
             </div>
             {formData.offer && (
@@ -269,7 +277,7 @@ function CreateList() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted Price</p>
-                  <span className="text-xs">($/month)</span>
+                  <span className="text-xs">{leaseTrue? "Ksh/month": "Ksh" }</span>
                 </div>
               </div>
             )}
